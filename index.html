@@ -467,7 +467,7 @@
             <th style="width:7%">數量</th>
             <th style="width:11%">小計</th>
             <th style="width:13%">設置地點</th>
-            <th>用途／對應做法</th>
+            <th>用途與說明</th>
             <th></th>
           </tr>
         </thead>
@@ -499,7 +499,7 @@
 
   <script>
     /* ★ 部署 Apps Script 網頁應用程式後，把「網頁應用程式網址」貼到這裡 */
-    const API_URL = 'https://script.google.com/macros/s/AKfycbymYxweI7WwIg1td-Bl90aZnmVprvxOiuEUVG64hYrhGQRf5Y58bEjyl-Ubd7u3Ong4MA/exec';
+    const API_URL = 'https://script.google.com/macros/s/AKfycbx63ioybn_beT1Jr3679y4_Rg8rMDpE6h8UWCvSuP4cAOeiJn6B1NNmrUSxI7uihsJRZQ/exec';
 
     const _q = new URLSearchParams(location.search);
     const PREFILL_ID = _q.get('id') || '', PREFILL_CODE = _q.get('code') || '';
@@ -557,7 +557,7 @@
     <td><input type="number" class="e-qty" min="0" value="${r.qty ?? ''}" oninput="calc()"></td>
     <td class="sub e-sub">0</td>
     <td><input type="text" class="e-loc" placeholder="例：C213教室" value="${esc(r.location)}"></td>
-    <td><input type="text" class="e-purpose" value="${esc(r.purpose)}"></td>
+    <td><textarea class="e-purpose" placeholder="這項設備用來做什麼、對應哪一項執行做法（請具體說明）">${esc(r.purpose)}</textarea></td>
     <td><button class="del" type="button" onclick="this.closest('tr').remove();calc()">刪除</button></td>`;
       calc();
     }
