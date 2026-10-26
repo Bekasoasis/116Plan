@@ -1,556 +1,251 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
-
 <head>
-  <meta charset="utf-8">
-  <link
-    href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@600;700&family=Noto+Sans+TC:wght@400;500;700&display=swap"
-    rel="stylesheet">
-  <style>
-    :root {
-      --brown: #5C4033;
-      --brown-deep: #3E2A20;
-      --gold: #C9A227;
-      --gold-soft: #F1E6C4;
-      --parchment: #F7F3EA;
-      --paper: #FFFFFF;
-      --ink: #2B2320;
-      --muted: #7A6A5F;
-      --line: #DDD3C3;
-      --ok: #2E7D5B;
-      --err: #B3261E;
-    }
-
-    * {
-      box-sizing: border-box
-    }
-
-    body {
-      margin: 0;
-      background: var(--parchment);
-      color: var(--ink);
-      font-family: "Noto Sans TC", system-ui, sans-serif;
-      font-size: 15px;
-      line-height: 1.7
-    }
-
-    header {
-      background: var(--brown);
-      color: #fff;
-      padding: 28px 20px;
-      border-bottom: 6px solid var(--gold)
-    }
-
-    header .wrap {
-      max-width: 960px;
-      margin: 0 auto
-    }
-
-    header h1 {
-      font-family: "Noto Serif TC", serif;
-      font-size: 26px;
-      margin: 0 0 4px;
-      letter-spacing: .04em
-    }
-
-    header p {
-      margin: 0;
-      opacity: .85;
-      font-size: 14px
-    }
-
-    main {
-      max-width: 960px;
-      margin: 0 auto;
-      padding: 24px 16px 80px
-    }
-
-    section {
-      background: var(--paper);
-      border: 1px solid var(--line);
-      border-left: 5px solid var(--gold);
-      padding: 22px 24px;
-      margin-bottom: 22px
-    }
-
-    section h2 {
-      font-family: "Noto Serif TC", serif;
-      font-size: 19px;
-      margin: 0 0 14px;
-      color: var(--brown)
-    }
-
-    label {
-      display: block;
-      font-weight: 500;
-      margin: 12px 0 4px
-    }
-
-    label small {
-      font-weight: 400;
-      color: var(--muted);
-      margin-left: 6px
-    }
-
-    input[type=text],
-    input[type=email],
-    input[type=number],
-    select,
-    textarea {
-      width: 100%;
-      padding: 9px 11px;
-      border: 1px solid var(--line);
-      border-radius: 4px;
-      font: inherit;
-      background: #fff
-    }
-
-    textarea {
-      min-height: 110px;
-      resize: vertical
-    }
-
-    input:focus,
-    select:focus,
-    textarea:focus {
-      outline: 2px solid var(--gold);
-      outline-offset: 1px;
-      border-color: var(--gold)
-    }
-
-    .grid {
-      display: grid;
-      gap: 0 18px;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr))
-    }
-
-    .req::after {
-      content: " *";
-      color: var(--err)
-    }
-
-    .hint {
-      color: var(--muted);
-      font-size: 13px;
-      margin: 2px 0 0
-    }
-
-    .goal {
-      border: 1px solid var(--line);
-      border-radius: 4px;
-      padding: 10px 14px;
-      margin: 8px 0
-    }
-
-    .goal summary {
-      cursor: pointer;
-      font-weight: 500;
-      color: var(--brown)
-    }
-
-    .goal .strat {
-      display: block;
-      font-weight: 400;
-      margin: 6px 0 6px 6px
-    }
-
-    .goal .strat input {
-      margin-right: 8px
-    }
-
-    .feat {
-      border: 1px solid var(--line);
-      border-radius: 4px;
-      padding: 10px 12px;
-      margin: 6px 0;
-      cursor: pointer;
-      font-weight: 400
-    }
-
-    .feat input {
-      margin-right: 8px
-    }
-
-    .feat small {
-      display: block;
-      color: var(--muted);
-      margin-left: 24px
-    }
-
-    .feat:has(input:checked) {
-      border-color: var(--gold);
-      background: var(--gold-soft)
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 8px;
-      font-size: 14px
-    }
-
-    th {
-      background: var(--gold-soft);
-      color: var(--brown-deep);
-      text-align: left;
-      padding: 8px;
-      font-weight: 500;
-      border-bottom: 2px solid var(--gold)
-    }
-
-    td {
-      padding: 6px 4px;
-      border-bottom: 1px solid var(--line);
-      vertical-align: top
-    }
-
-    td input,
-    td textarea {
-      padding: 7px 8px;
-      font-size: 14px
-    }
-
-    td textarea {
-      min-height: 60px
-    }
-
-    .sub {
-      white-space: nowrap;
-      text-align: right;
-      padding-top: 14px
-    }
-
-    .del {
-      background: none;
-      border: 1px solid var(--line);
-      color: var(--muted);
-      border-radius: 4px;
-      cursor: pointer;
-      padding: 6px 8px
-    }
-
-    .del:hover {
-      color: var(--err);
-      border-color: var(--err)
-    }
-
-    .total {
-      text-align: right;
-      font-weight: 700;
-      color: var(--brown);
-      margin-top: 10px;
-      font-size: 16px
-    }
-
-    button.pri,
-    button.sec {
-      font: inherit;
-      padding: 11px 22px;
-      border-radius: 4px;
-      cursor: pointer;
-      font-weight: 500
-    }
-
-    button.pri {
-      background: var(--brown);
-      color: #fff;
-      border: none
-    }
-
-    button.pri:hover {
-      background: var(--brown-deep)
-    }
-
-    button.sec {
-      background: #fff;
-      color: var(--brown);
-      border: 1px solid var(--brown)
-    }
-
-    button:disabled {
-      opacity: .5;
-      cursor: wait
-    }
-
-    .actions {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-      align-items: center
-    }
-
-    .notice {
-      background: var(--gold-soft);
-      border-left: 4px solid var(--gold);
-      padding: 12px 16px;
-      margin-bottom: 22px
-    }
-
-    #resume {
-      background: #fff;
-      border: 1px dashed var(--brown);
-      padding: 14px 18px;
-      margin-bottom: 22px
-    }
-
-    #resume .grid {
-      align-items: end
-    }
-
-    #status {
-      position: fixed;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      padding: 12px 20px;
-      text-align: center;
-      display: none;
-      color: #fff;
-      font-weight: 500
-    }
-
-    #status.ok {
-      background: var(--ok)
-    }
-
-    #status.err {
-      background: var(--err)
-    }
-
-    #status.busy {
-      background: var(--brown)
-    }
-
-    .filelist {
-      font-size: 13px;
-      color: var(--muted)
-    }
-
-    .filelist a {
-      color: var(--brown)
-    }
-
-    .badge {
-      display: inline-block;
-      background: var(--gold);
-      color: var(--brown-deep);
-      padding: 2px 10px;
-      border-radius: 12px;
-      font-size: 13px;
-      margin-left: 8px
-    }
-
-    #done {
-      display: none
-    }
-
-    #done code {
-      font-size: 18px;
-      background: var(--gold-soft);
-      padding: 2px 8px;
-      border-radius: 4px
-    }
-
-    @media (max-width:640px) {
-
-      table,
-      thead,
-      tbody,
-      tr,
-      td,
-      th {
-        display: block
-      }
-
-      th {
-        display: none
-      }
-
-      td {
-        border: none;
-        padding: 4px 0
-      }
-
-      tr {
-        border-bottom: 2px solid var(--line);
-        padding: 10px 0
-      }
-
-      .sub {
-        text-align: left
-      }
-    }
-  </style>
+<meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@600;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --brown:#5C4033; --brown-deep:#3E2A20; --gold:#C9A227; --gold-soft:#F1E6C4;
+  --parchment:#F7F3EA; --paper:#FFFFFF; --ink:#2B2320; --muted:#7A6A5F;
+  --line:#DDD3C3; --ok:#2E7D5B; --err:#B3261E;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--parchment);color:var(--ink);font-family:"Noto Sans TC",system-ui,sans-serif;font-size:15px;line-height:1.7}
+header{background:var(--brown);color:#fff;padding:28px 20px;border-bottom:6px solid var(--gold)}
+header .wrap{max-width:960px;margin:0 auto}
+header h1{font-family:"Noto Serif TC",serif;font-size:26px;margin:0 0 4px;letter-spacing:.04em}
+header p{margin:0;opacity:.85;font-size:14px}
+main{max-width:960px;margin:0 auto;padding:24px 16px 80px}
+section{background:var(--paper);border:1px solid var(--line);border-left:5px solid var(--gold);padding:22px 24px;margin-bottom:22px}
+section h2{font-family:"Noto Serif TC",serif;font-size:19px;margin:0 0 14px;color:var(--brown)}
+label{display:block;font-weight:500;margin:12px 0 4px}
+label small{font-weight:400;color:var(--muted);margin-left:6px}
+input[type=text],input[type=email],input[type=number],select,textarea{
+  width:100%;padding:9px 11px;border:1px solid var(--line);border-radius:4px;font:inherit;background:#fff}
+textarea{min-height:110px;resize:vertical}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--gold);outline-offset:1px;border-color:var(--gold)}
+.grid{display:grid;gap:0 18px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+.req::after{content:" *";color:var(--err)}
+.hint{color:var(--muted);font-size:13px;margin:2px 0 0}
+.goal{border:1px solid var(--line);border-radius:4px;padding:10px 14px;margin:8px 0}
+.goal summary{cursor:pointer;font-weight:500;color:var(--brown)}
+.goal .strat{display:block;font-weight:400;margin:6px 0 6px 6px}
+.goal .strat input{margin-right:8px}
+.feat{border:1px solid var(--line);border-radius:4px;padding:10px 12px;margin:6px 0;cursor:pointer;font-weight:400}
+.feat input{margin-right:8px}
+.feat small{display:block;color:var(--muted);margin-left:24px}
+.feat:has(input:checked){border-color:var(--gold);background:var(--gold-soft)}
+table{width:100%;border-collapse:collapse;margin-top:8px;font-size:14px}
+th{background:var(--gold-soft);color:var(--brown-deep);text-align:left;padding:8px;font-weight:500;border-bottom:2px solid var(--gold)}
+td{padding:6px 4px;border-bottom:1px solid var(--line);vertical-align:top}
+td input,td textarea{padding:7px 8px;font-size:14px}
+td textarea{min-height:60px}
+.sub{white-space:nowrap;text-align:right;padding-top:14px}
+.del{background:none;border:1px solid var(--line);color:var(--muted);border-radius:4px;cursor:pointer;padding:6px 8px}
+.del:hover{color:var(--err);border-color:var(--err)}
+.total{text-align:right;font-weight:700;color:var(--brown);margin-top:10px;font-size:16px}
+button.pri,button.sec{font:inherit;padding:11px 22px;border-radius:4px;cursor:pointer;font-weight:500}
+button.pri{background:var(--brown);color:#fff;border:none}
+button.pri:hover{background:var(--brown-deep)}
+button.sec{background:#fff;color:var(--brown);border:1px solid var(--brown)}
+button:disabled{opacity:.5;cursor:wait}
+.actions{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.notice{background:var(--gold-soft);border-left:4px solid var(--gold);padding:12px 16px;margin-bottom:22px}
+#resume{background:#fff;border:1px dashed var(--brown);padding:14px 18px;margin-bottom:22px}
+#resume .grid{align-items:end}
+#status{position:fixed;left:0;right:0;bottom:0;padding:12px 20px;text-align:center;display:none;color:#fff;font-weight:500}
+#status.ok{background:var(--ok)} #status.err{background:var(--err)} #status.busy{background:var(--brown)}
+.filelist{font-size:13px;color:var(--muted)}
+.filelist a{color:var(--brown)}
+.badge{display:inline-block;background:var(--gold);color:var(--brown-deep);padding:2px 10px;border-radius:12px;font-size:13px;margin-left:8px}
+#done{display:none}
+#done code{font-size:18px;background:var(--gold-soft);padding:2px 8px;border-radius:4px}
+@media (max-width:640px){ table,thead,tbody,tr,td,th{display:block} th{display:none} td{border:none;padding:4px 0} tr{border-bottom:2px solid var(--line);padding:10px 0} .sub{text-align:left} }
+</style>
 </head>
-
 <body>
-  <header>
-    <div class="wrap">
-      <h1>116學年度系所特色發展計畫填報</h1>
-      <p>南華大學研發處校務發展組　｜　各教學單位填寫後直接彙入校務發展計畫資料庫</p>
+<header><div class="wrap">
+  <h1>116學年度系所特色發展計畫填報</h1>
+  <p>南華大學研發處校務發展組　｜　各教學單位填寫後直接彙入校務發展計畫資料庫</p>
+</div></header>
+
+<main>
+  <div class="notice" id="notice">載入設定中…</div>
+
+  <div id="resume">
+    <strong>已經填過？</strong> 輸入填報編號與編輯碼即可接續填寫或修改。
+    <div class="grid">
+      <div><label>填報編號</label><input type="text" id="rId" placeholder="NHU116-001"></div>
+      <div><label>編輯碼</label><input type="text" id="rCode" placeholder="6碼" style="text-transform:uppercase"></div>
+      <div><label>&nbsp;</label><button class="sec" onclick="resume()">載入既有資料</button></div>
     </div>
-  </header>
+  </div>
 
-  <main>
-    <div class="notice" id="notice">載入設定中…</div>
+  <div id="done">
+    <section>
+      <h2>已儲存<span class="badge" id="doneStatus"></span></h2>
+      <p>填報編號 <code id="doneId"></code>　編輯碼 <code id="doneCode"></code></p>
+      <p>要回來繼續填寫，請保存這個連結（也已寄到您填的 Email）：<br><a id="doneUrl" href="#"></a></p>
+      <p class="hint">送出後仍可用同一組編號與編輯碼修改，以最後一次送出為準。</p>
+    </section>
+  </div>
 
-    <div id="resume">
-      <strong>已經填過？</strong> 輸入填報編號與編輯碼即可接續填寫或修改。
-      <div class="grid">
-        <div><label>填報編號</label><input type="text" id="rId" placeholder="NHU116-001"></div>
-        <div><label>編輯碼</label><input type="text" id="rCode" placeholder="6碼" style="text-transform:uppercase"></div>
-        <div><label>&nbsp;</label><button class="sec" onclick="resume()">載入既有資料</button></div>
-      </div>
+  <section>
+    <h2>一、填報單位</h2>
+    <div class="grid">
+      <div><label class="req">學院</label>
+        <select id="college" onchange="fillDept()"><option value="">請選擇</option></select></div>
+      <div><label class="req">系所</label>
+        <select id="dept"><option value="">請先選擇學院</option></select></div>
     </div>
-
-    <div id="done">
-      <section>
-        <h2>已儲存<span class="badge" id="doneStatus"></span></h2>
-        <p>填報編號 <code id="doneId"></code>　編輯碼 <code id="doneCode"></code></p>
-        <p>要回來繼續填寫，請保存這個連結（也已寄到您填的 Email）：<br><a id="doneUrl" href="#"></a></p>
-        <p class="hint">送出後仍可用同一組編號與編輯碼修改，以最後一次送出為準。</p>
-      </section>
+    <label class="req">計畫名稱</label><input type="text" id="title" placeholder="例：智慧財務決策實驗室建置計畫">
+    <div class="grid">
+      <div><label class="req">聯絡人</label><input type="text" id="contact"></div>
+      <div><label>分機</label><input type="text" id="ext"></div>
+      <div><label class="req">Email<small>系統會寄送編輯碼與續填連結</small></label><input type="email" id="email"></div>
     </div>
+  </section>
 
-    <section>
-      <h2>一、填報單位</h2>
-      <div class="grid">
-        <div><label class="req">學院</label>
-          <select id="college" onchange="fillDept()">
-            <option value="">請選擇</option>
-          </select>
-        </div>
-        <div><label class="req">系所</label>
-          <select id="dept">
-            <option value="">請先選擇學院</option>
-          </select>
-        </div>
-      </div>
-      <label class="req">計畫名稱</label><input type="text" id="title" placeholder="例：智慧財務決策實驗室建置計畫">
-      <div class="grid">
-        <div><label class="req">聯絡人</label><input type="text" id="contact"></div>
-        <div><label>分機</label><input type="text" id="ext"></div>
-        <div><label class="req">Email<small>系統會寄送編輯碼與續填連結</small></label><input type="email" id="email"></div>
-      </div>
-    </section>
+  <section>
+    <h2>二、對應 112-116 學年度校務發展計畫</h2>
+    <p class="hint">請勾選本計畫對應的校發計畫重點項目（可複選）。勾選後所屬主軸會自動帶入。</p>
+    <div id="planTree"></div>
 
-    <section>
-      <h2>二、對應 112-116 學年度校務發展計畫</h2>
-      <p class="hint">請勾選本計畫對應的校發計畫策略（可複選）。勾選策略後，所屬目標會自動帶入。</p>
-      <div id="planTree"></div>
+    <label class="req" style="margin-top:20px">與學校辦學特色的關聯<small>至少勾選一項</small></label>
+    <div id="featBox" class="grid"></div>
+    <label>關聯說明<small>本計畫如何呼應所勾選的特色</small></label>
+    <textarea id="featureNote" style="min-height:80px" placeholder="例：實驗室建置結合永續材料課程，呼應「環境永續」；成果納入生命教育週展示"></textarea>
+  </section>
 
-      <label class="req" style="margin-top:20px">與學校辦學特色的關聯<small>至少勾選一項</small></label>
-      <div id="featBox" class="grid"></div>
-      <label>關聯說明<small>本計畫如何呼應所勾選的特色</small></label>
-      <textarea id="featureNote" style="min-height:80px" placeholder="例：實驗室建置結合永續材料課程，呼應「環境永續」；成果納入生命教育週展示"></textarea>
-    </section>
+  <section>
+    <h2>三、計畫內容</h2>
+    <label class="req">現況分析與需求<small>系所現況、遭遇問題、為何需要此計畫</small></label>
+    <textarea id="context"></textarea>
+    <label class="req">計畫目標</label>
+    <textarea id="objective" placeholder="條列 2～4 項，每項一句話說清楚要達成什麼"></textarea>
+    <label class="req">執行做法<small>具體作為、時程、負責人員</small></label>
+    <textarea id="method"></textarea>
+  </section>
 
-    <section>
-      <h2>三、計畫內容</h2>
-      <label class="req">現況分析與需求<small>系所現況、遭遇問題、為何需要此計畫</small></label>
-      <textarea id="context"></textarea>
-      <label class="req">計畫目標</label>
-      <textarea id="objective" placeholder="條列 2～4 項，每項一句話說清楚要達成什麼"></textarea>
-      <label class="req">執行做法<small>具體作為、時程、負責人員</small></label>
-      <textarea id="method"></textarea>
-    </section>
+  <section>
+    <h2>四、購置設備</h2>
+    <p class="hint">單價與數量填數字即可，小計與合計自動計算。無設備需求可留空。</p>
+    <table id="eqTable">
+      <thead><tr><th style="width:15%">設備名稱</th><th style="width:20%">基本規格</th><th style="width:9%">單價</th><th style="width:6%">數量</th><th style="width:9%">小計</th><th style="width:13%">設置地點</th><th style="width:19%">用途與說明</th><th></th></tr></thead>
+      <tbody></tbody>
+    </table>
+    <button class="sec" type="button" onclick="addRow()" style="margin-top:10px">＋ 新增一項設備</button>
+    <div class="total">設備合計：NT$ <span id="total">0</span></div>
 
-    <section>
-      <h2>四、購置設備</h2>
-      <p class="hint">單價與數量填數字即可，小計與合計自動計算。無設備需求可留空。</p>
-      <table id="eqTable">
-        <thead>
-          <tr>
-            <th style="width:18%">設備名稱</th>
-            <th style="width:26%">基本規格</th>
-            <th style="width:11%">單價</th>
-            <th style="width:7%">數量</th>
-            <th style="width:11%">小計</th>
-            <th style="width:13%">設置地點</th>
-            <th>用途與說明</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
-      <button class="sec" type="button" onclick="addRow()" style="margin-top:10px">＋ 新增一項設備</button>
-      <div class="total">設備合計：NT$ <span id="total">0</span></div>
+    <label>上傳估價單<small>PDF / JPG / PNG，每檔 10MB 以內，可多選</small></label>
+    <input type="file" id="files" multiple accept=".pdf,.jpg,.jpeg,.png">
+    <div class="filelist" id="oldFiles"></div>
+  </section>
 
-      <label>上傳估價單<small>PDF / JPG / PNG，每檔 10MB 以內，可多選</small></label>
-      <input type="file" id="files" multiple accept=".pdf,.jpg,.jpeg,.png">
-      <div class="filelist" id="oldFiles"></div>
-    </section>
+  <section>
+    <h2>五、預期達成目標</h2>
+    <label class="req">預期效益</label>
+    <textarea id="outcome" placeholder="對學生學習、招生、產學或系所特色的具體影響"></textarea>
+    <label class="req">量化指標<small>可查核的數字：受益人數、課程數、證照數、產學金額…</small></label>
+    <textarea id="kpi" placeholder="例：116-1 開設 2 門實作課程，受益學生 120 人；取得證照 30 張"></textarea>
+  </section>
 
-    <section>
-      <h2>五、預期達成目標</h2>
-      <label class="req">預期效益</label>
-      <textarea id="outcome" placeholder="對學生學習、招生、產學或系所特色的具體影響"></textarea>
-      <label class="req">量化指標<small>可查核的數字：受益人數、課程數、證照數、產學金額…</small></label>
-      <textarea id="kpi" placeholder="例：116-1 開設 2 門實作課程，受益學生 120 人；取得證照 30 張"></textarea>
-    </section>
+  <div class="actions">
+    <button class="sec" onclick="save('draft')" id="btnDraft">儲存草稿</button>
+    <button class="pri" onclick="save('submitted')" id="btnSubmit">送出計畫</button>
+    <span class="hint">草稿只存在資料庫不列入彙整；送出後校務發展組才會看到。</span>
+  </div>
+</main>
+<div id="status"></div>
 
-    <div class="actions">
-      <button class="sec" onclick="save('draft')" id="btnDraft">儲存草稿</button>
-      <button class="pri" onclick="save('submitted')" id="btnSubmit">送出計畫</button>
-      <span class="hint">草稿只存在資料庫不列入彙整；送出後校務發展組才會看到。</span>
-    </div>
-  </main>
-  <div id="status"></div>
+<script>
+/* 後端：Apps Script 網頁應用程式（學校帳號部署，存取權「任何人」） */
+const API_URL = 'https://script.google.com/macros/s/AKfycbx63ioybn_beT1Jr3679y4_Rg8rMDpE6h8UWCvSuP4cAOeiJn6B1NNmrUSxI7uihsJRZQ/exec';
 
-  <script>
-    /* ★ 部署 Apps Script 網頁應用程式後，把「網頁應用程式網址」貼到這裡 */
-    const API_URL = 'https://script.google.com/macros/s/AKfycbx63ioybn_beT1Jr3679y4_Rg8rMDpE6h8UWCvSuP4cAOeiJn6B1NNmrUSxI7uihsJRZQ/exec';
+const _q = new URLSearchParams(location.search);
+const PREFILL_ID = _q.get('id') || '', PREFILL_CODE = _q.get('code') || '';
 
-    const _q = new URLSearchParams(location.search);
-    const PREFILL_ID = _q.get('id') || '', PREFILL_CODE = _q.get('code') || '';
+/* 以 fetch 呼叫 Apps Script；用 text/plain 送 JSON 可避開 CORS 預檢 */
+async function api(action, payload) {
+  const res = await fetch(API_URL, { method:'POST', headers:{ 'Content-Type':'text/plain;charset=utf-8' }, body: JSON.stringify({ action, ...payload }) });
+  const data = await res.json();
+  if (data.error) throw new Error(data.error);
+  return data;
+}
+let CFG = null, REC = { id:'', code:'' };
+/* 後備名單：伺服器設定讀不到時，下拉選單至少能用（以試算表「設定_學院系所」為準） */
+const FALLBACK_UNITS = [
+  ['管理學院','企業管理學系'],['管理學院','財務金融學系'],['管理學院','旅遊管理學系'],
+  ['管理學院','管理學院國際企業學士學位學程'],
+  ['人文學院','文學系'],['人文學院','生死學系'],['人文學院','宗教學研究所'],
+  ['人文學院','幼兒教育學系'],['人文學院','外國語文學系'],
+  ['人文學院','運動與健康促進學士學位學程'],['人文學院','全齡運動科學與健康促進碩士學位學程'],
+  ['人文學院','人間佛教數位學習碩士在職專班'],
+  ['人文學院','語文教學中心'],
+  ['社會科學院','國際事務與企業學系'],['社會科學院','社會工作學系'],['社會科學院','傳播學系'],
+  ['藝術與設計學院','視覺藝術與設計學系'],['藝術與設計學院','建築學系'],
+  ['藝術與設計學院','產品與室內設計學系'],['藝術與設計學院','民族音樂學系'],
+  ['藝術與設計學院','音樂跨域設計與藝術管理學士學位學程'],
+  ['藝術與設計學院','藝術與設計跨域碩士學位學程'],
+  ['科技學院','資訊管理學系'],['科技學院','資訊工程學系'],['科技學院','資訊科技進修學士班'],
+  ['科技學院','自然生物科技學系'],['科技學院','永續綠色科技碩士學位學程'],
+  ['科技學院','半導體應用學士學位學程'],
+  ['通識教育中心','通識教育中心']
+];
+function fallbackConfig() {
+  const colleges = {};
+  FALLBACK_UNITS.forEach(([c, d]) => (colleges[c] = colleges[c] || []).push(d));
+  return { colleges, plan: [], features: [], sys: {}, missing: [] };
+}
 
-    /* 以 fetch 呼叫 Apps Script；用 text/plain 送 JSON 可避開 CORS 預檢 */
-    async function api(action, payload) {
-      const opt = { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ action, ...payload }) };
-      const res = await fetch(API_URL, opt);
-      const data = await res.json();
-      if (data.error) throw new Error(data.error);
-      return data;
-    }
-    let CFG = null, REC = { id: '', code: '' };
-    const $ = id => document.getElementById(id);
+const $ = id => document.getElementById(id);
 
-    /* ---- 初始化 ---- */
-    api('config', {}).then(cfg => {
-      CFG = cfg;
-      const c = $('college');
-      Object.keys(cfg.colleges).forEach(k => c.add(new Option(k, k)));
-      buildPlanTree(cfg.plan);
-      $('featBox').innerHTML = cfg.features.map(f => `<label class="feat"><input type="checkbox" name="feat" value="${f.name}">${f.name}<small>${f.desc}</small></label>`).join('');
-      const d = cfg.sys['填報截止'] ? '　填報截止：' + fmt(cfg.sys['填報截止']) : '';
-      $('notice').textContent = (cfg.sys['公告文字'] || '') + d;
-      addRow();
-      if (PREFILL_ID && PREFILL_CODE) { $('rId').value = PREFILL_ID; $('rCode').value = PREFILL_CODE; resume(); }
-      else restoreLocal();
-    }).catch(e => toast('設定載入失敗：' + e.message, 'err'));
+/* ---- 初始化 ---- */
+api('config', {}).then(cfg => {
+  init(cfg);
+}).catch(e => { init(fallbackConfig()); showErr('無法連到後端（' + e.message + '）。暫以內建名單顯示，校發重點項目與辦學特色無法勾選，請稍後重整或洽校務發展組。'); });
 
-    function fmt(v) { try { return new Date(v).toLocaleDateString('zh-TW'); } catch (e) { return v; } }
+function init(cfg) {
+  CFG = cfg;
+  let warn = '';
+  if (cfg.missing && cfg.missing.length) warn = '試算表缺少工作表：' + cfg.missing.join('、') + '，請在 Apps Script 執行 setupSheets()。';
+  if (!Object.keys(cfg.colleges || {}).length) { warn += '「設定_學院系所」沒有資料，暫以內建名單顯示。'; cfg.colleges = fallbackConfig().colleges; }
+  const c = $('college');
+  Object.keys(cfg.colleges).forEach(k => c.add(new Option(k, k)));
+  buildPlanTree(cfg.plan || []);
+  $('featBox').innerHTML = (cfg.features || []).map(f => `<label class="feat"><input type="checkbox" name="feat" value="${f.name}">${f.name}<small>${f.desc}</small></label>`).join('');
+  const sys = cfg.sys || {};
+  const d = sys['填報截止'] ? '　填報截止：' + fmt(sys['填報截止']) : '';
+  $('notice').textContent = (sys['公告文字'] || '') + d;
+  if (warn) showErr(warn);
+  if (!$('eqTable').tBodies[0].rows.length) addRow();
+  if (PREFILL_ID && PREFILL_CODE) { $('rId').value = PREFILL_ID; $('rCode').value = PREFILL_CODE; resume(); }
+  else restoreLocal();
+}
+function showErr(msg) { const n = $('notice'); n.style.background = '#FBE9E7'; n.style.borderLeftColor = '#B3261E'; n.textContent = msg; }
 
-    function fillDept(keep) {
-      const d = $('dept'); d.innerHTML = '<option value="">請選擇</option>';
-      (CFG.colleges[$('college').value] || []).forEach(x => d.add(new Option(x, x)));
-      if (keep) d.value = keep;
-    }
+function fmt(v){ try { return new Date(v).toLocaleDateString('zh-TW'); } catch(e){ return v; } }
 
-    function buildPlanTree(plan) {
-      const byGoal = {};
-      plan.forEach(p => { (byGoal[p.g] = byGoal[p.g] || { name: p.gName, s: [] }).s.push(p); });
-      $('planTree').innerHTML = Object.keys(byGoal).map(g => `
-    <details class="goal" open><summary>${g}　${byGoal[g].name}</summary>
+function fillDept(keep) {
+  const d = $('dept'); d.innerHTML = '<option value="">請選擇</option>';
+  (CFG.colleges[$('college').value] || []).forEach(x => d.add(new Option(x, x)));
+  if (keep) d.value = keep;
+}
+
+function buildPlanTree(plan) {
+  const byGoal = {};
+  plan.forEach(p => { (byGoal[p.g] = byGoal[p.g] || { name:p.gName, s:[] }).s.push(p); });
+  $('planTree').innerHTML = Object.keys(byGoal).map(g => `
+    <details class="goal"><summary>${g}　${byGoal[g].name}</summary>
       ${byGoal[g].s.map(p => `<label class="strat"><input type="checkbox" name="strat" value="${p.s}" data-goal="${g}">${p.s}　${p.sName}</label>`).join('')}
     </details>`).join('');
-    }
+}
 
-    /* ---- 設備列 ---- */
-    function addRow(r = {}) {
-      const tb = $('eqTable').tBodies[0];
-      const tr = tb.insertRow();
-      tr.innerHTML = `
+/* ---- 設備列 ---- */
+function addRow(r = {}) {
+  const tb = $('eqTable').tBodies[0];
+  const tr = tb.insertRow();
+  tr.innerHTML = `
     <td><input type="text" class="e-name" value="${esc(r.name)}"></td>
     <td><textarea class="e-spec" placeholder="品牌／型號／關鍵規格">${esc(r.spec)}</textarea></td>
     <td><input type="number" class="e-price" min="0" value="${r.price ?? ''}" oninput="calc()"></td>
@@ -559,132 +254,132 @@
     <td><input type="text" class="e-loc" placeholder="例：C213教室" value="${esc(r.location)}"></td>
     <td><textarea class="e-purpose" placeholder="這項設備用來做什麼、對應哪一項執行做法（請具體說明）">${esc(r.purpose)}</textarea></td>
     <td><button class="del" type="button" onclick="this.closest('tr').remove();calc()">刪除</button></td>`;
-      calc();
-    }
-    function calc() {
-      let t = 0;
-      document.querySelectorAll('#eqTable tbody tr').forEach(tr => {
-        const s = (+tr.querySelector('.e-price').value || 0) * (+tr.querySelector('.e-qty').value || 0);
-        tr.querySelector('.e-sub').textContent = s.toLocaleString(); t += s;
-      });
-      $('total').textContent = t.toLocaleString();
-    }
-    function esc(s) { return String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;'); }
+  calc();
+}
+function calc() {
+  let t = 0;
+  document.querySelectorAll('#eqTable tbody tr').forEach(tr => {
+    const s = (+tr.querySelector('.e-price').value || 0) * (+tr.querySelector('.e-qty').value || 0);
+    tr.querySelector('.e-sub').textContent = s.toLocaleString(); t += s;
+  });
+  $('total').textContent = t.toLocaleString();
+}
+function esc(s){ return String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;'); }
 
-    /* ---- 收集表單 ---- */
-    function collect() {
-      const strategies = [...document.querySelectorAll('input[name=strat]:checked')];
-      return {
-        form: {
-          college: $('college').value, dept: $('dept').value, title: $('title').value.trim(),
-          contact: $('contact').value.trim(), ext: $('ext').value.trim(), email: $('email').value.trim(),
-          goals: [...new Set(strategies.map(x => x.dataset.goal))],
-          strategies: strategies.map(x => x.value),
-          features: [...document.querySelectorAll('input[name=feat]:checked')].map(x => x.value),
-          featureNote: $('featureNote').value,
-          context: $('context').value, objective: $('objective').value, method: $('method').value,
-          outcome: $('outcome').value, kpi: $('kpi').value
-        },
-        equipment: [...document.querySelectorAll('#eqTable tbody tr')].map(tr => ({
-          name: tr.querySelector('.e-name').value.trim(), spec: tr.querySelector('.e-spec').value.trim(),
-          price: tr.querySelector('.e-price').value, qty: tr.querySelector('.e-qty').value,
-          location: tr.querySelector('.e-loc').value.trim(), purpose: tr.querySelector('.e-purpose').value.trim()
-        })).filter(r => r.name)
-      };
-    }
-    function validate(d, strict) {
-      const f = d.form, miss = [];
-      if (!f.college) miss.push('學院'); if (!f.dept) miss.push('系所');
-      if (!f.title) miss.push('計畫名稱'); if (!f.contact) miss.push('聯絡人'); if (!f.email) miss.push('Email');
-      if (strict) {
-        if (!f.strategies.length) miss.push('對應校發策略');
-        if (!f.features.length) miss.push('學校辦學特色關聯');
-        ['context', 'objective', 'method', 'outcome', 'kpi'].forEach(k => { if (!f[k].trim()) miss.push({ context: '現況分析', objective: '計畫目標', method: '執行做法', outcome: '預期效益', kpi: '量化指標' }[k]); });
-        d.equipment.forEach((r, i) => { if (!(+r.price > 0) || !(+r.qty > 0) || !r.location) miss.push(`設備第${i + 1}項的單價／數量／設置地點`); });
-      }
-      return miss;
-    }
+/* ---- 收集表單 ---- */
+function collect() {
+  const strategies = [...document.querySelectorAll('input[name=strat]:checked')];
+  return {
+    form: {
+      college:$('college').value, dept:$('dept').value, title:$('title').value.trim(),
+      contact:$('contact').value.trim(), ext:$('ext').value.trim(), email:$('email').value.trim(),
+      goals:[...new Set(strategies.map(x => x.dataset.goal))],
+      strategies: strategies.map(x => x.value),
+      features: [...document.querySelectorAll('input[name=feat]:checked')].map(x => x.value),
+      featureNote: $('featureNote').value,
+      context:$('context').value, objective:$('objective').value, method:$('method').value,
+      outcome:$('outcome').value, kpi:$('kpi').value
+    },
+    equipment: [...document.querySelectorAll('#eqTable tbody tr')].map(tr => ({
+      name:tr.querySelector('.e-name').value.trim(), spec:tr.querySelector('.e-spec').value.trim(),
+      price:tr.querySelector('.e-price').value, qty:tr.querySelector('.e-qty').value,
+      location:tr.querySelector('.e-loc').value.trim(), purpose:tr.querySelector('.e-purpose').value.trim()
+    })).filter(r => r.name)
+  };
+}
+function validate(d, strict) {
+  const f = d.form, miss = [];
+  if (!f.college) miss.push('學院'); if (!f.dept) miss.push('系所');
+  if (!f.title) miss.push('計畫名稱'); if (!f.contact) miss.push('聯絡人'); if (!f.email) miss.push('Email');
+  if (strict) {
+    if (!f.strategies.length) miss.push('對應校發重點項目');
+    if (!f.features.length) miss.push('學校辦學特色關聯');
+    ['context','objective','method','outcome','kpi'].forEach(k => { if (!f[k].trim()) miss.push({context:'現況分析',objective:'計畫目標',method:'執行做法',outcome:'預期效益',kpi:'量化指標'}[k]); });
+    d.equipment.forEach((r,i) => { if (!(+r.price>0) || !(+r.qty>0) || !r.location) miss.push(`設備第${i+1}項的單價／數量／設置地點`); });
+  }
+  return miss;
+}
 
-    /* ---- 讀檔 ---- */
-    function readFiles() {
-      const fs = [...$('files').files];
-      const big = fs.find(f => f.size > 10 * 1024 * 1024);
-      if (big) return Promise.reject(new Error(big.name + ' 超過 10MB'));
-      return Promise.all(fs.map(f => new Promise((ok, no) => {
-        const r = new FileReader();
-        r.onload = () => ok({ name: f.name, mime: f.type || 'application/octet-stream', data: r.result.split(',')[1] });
-        r.onerror = () => no(new Error('讀取 ' + f.name + ' 失敗'));
-        r.readAsDataURL(f);
-      })));
-    }
+/* ---- 讀檔 ---- */
+function readFiles() {
+  const fs = [...$('files').files];
+  const big = fs.find(f => f.size > 10*1024*1024);
+  if (big) return Promise.reject(new Error(big.name + ' 超過 10MB'));
+  if (fs.reduce((a, f) => a + f.size, 0) > 20*1024*1024) return Promise.reject(new Error('本次上傳合計超過 20MB，請分次儲存上傳'));
+  return Promise.all(fs.map(f => new Promise((ok, no) => {
+    const r = new FileReader();
+    r.onload = () => ok({ name:f.name, mime:f.type || 'application/octet-stream', data:r.result.split(',')[1] });
+    r.onerror = () => no(new Error('讀取 ' + f.name + ' 失敗'));
+    r.readAsDataURL(f);
+  })));
+}
 
-    /* ---- 儲存 ---- */
-    async function save(status) {
-      const d = collect();
-      const miss = validate(d, status === 'submitted');
-      if (miss.length) return toast('請補齊：' + miss.join('、'), 'err');
-      if (status === 'submitted' && !confirm('確定送出？送出後仍可用編輯碼修改。')) return;
-      lockBtns(true); toast('儲存中，若有估價單會稍久…', 'busy');
-      try {
-        d.files = await readFiles();
-        d.id = REC.id; d.code = REC.code; d.status = status;
-        api('save', d).then(res => {
-          REC = { id: res.id, code: res.code };
-          $('doneId').textContent = res.id; $('doneCode').textContent = res.code;
-          $('doneStatus').textContent = res.status;
-          $('doneUrl').textContent = res.url; $('doneUrl').href = res.url;
-          $('done').style.display = 'block'; $('resume').style.display = 'none';
-          showFiles(res.files); $('files').value = '';
-          localStorage.removeItem('nhu116draft');
-          toast(res.status === '已送出' ? '已送出，通知信已寄出' : '草稿已儲存', 'ok');
-          lockBtns(false); window.scrollTo({ top: 0, behavior: 'smooth' });
-        }).catch(e => { toast('儲存失敗：' + e.message, 'err'); lockBtns(false); });
-      } catch (e) { toast(e.message, 'err'); lockBtns(false); }
-    }
+/* ---- 儲存 ---- */
+async function save(status) {
+  const d = collect();
+  const miss = validate(d, status === 'submitted');
+  if (miss.length) return toast('請補齊：' + miss.join('、'), 'err');
+  if (status === 'submitted' && !confirm('確定送出？送出後仍可用編輯碼修改。')) return;
+  lockBtns(true); toast('儲存中，若有估價單會稍久…', 'busy');
+  try {
+    d.files = await readFiles();
+    d.id = REC.id; d.code = REC.code; d.status = status;
+    api('save', d).then(res => {
+      REC = { id:res.id, code:res.code };
+      $('doneId').textContent = res.id; $('doneCode').textContent = res.code;
+      $('doneStatus').textContent = res.status;
+      $('doneUrl').textContent = res.url; $('doneUrl').href = res.url;
+      $('done').style.display = 'block'; $('resume').style.display = 'none';
+      showFiles(res.files); $('files').value = '';
+      localStorage.removeItem('nhu116draft');
+      toast(res.status === '已送出' ? '已送出，通知信已寄出' : '草稿已儲存', 'ok');
+      lockBtns(false); window.scrollTo({ top:0, behavior:'smooth' });
+    }).catch(e => { toast('儲存失敗：' + e.message, 'err'); lockBtns(false); });
+  } catch (e) { toast(e.message, 'err'); lockBtns(false); }
+}
 
-    /* ---- 重新連接 ---- */
-    function resume() {
-      const id = $('rId').value.trim(), code = $('rCode').value.trim().toUpperCase();
-      if (!id || !code) return toast('請輸入填報編號與編輯碼', 'err');
-      toast('載入中…', 'busy');
-      api('load', { id, code }).then(r => {
-        REC = { id: r.id, code: r.code };
-        const f = r.form;
-        $('college').value = f.college; fillDept(f.dept);
-        ['title', 'contact', 'ext', 'email', 'featureNote', 'context', 'objective', 'method', 'outcome', 'kpi'].forEach(k => $(k).value = f[k] || '');
-        document.querySelectorAll('input[name=strat]').forEach(cb => cb.checked = f.strategies.includes(cb.value));
-        document.querySelectorAll('input[name=feat]').forEach(cb => cb.checked = (f.features || []).includes(cb.value));
-        $('eqTable').tBodies[0].innerHTML = '';
-        (r.equipment.length ? r.equipment : [{}]).forEach(addRow);
-        showFiles(r.files);
-        $('doneId').textContent = r.id; $('doneCode').textContent = r.code; $('doneStatus').textContent = r.status;
-        const u = location.href.split('?')[0] + '?id=' + r.id + '&code=' + r.code;
-        $('doneUrl').textContent = u; $('doneUrl').href = u;
-        $('done').style.display = 'block'; $('resume').style.display = 'none';
-        toast('已載入 ' + f.dept + ' 的資料（' + r.status + '）', 'ok');
-      }).catch(e => toast(e.message, 'err'));
-    }
-    function showFiles(list) {
-      $('oldFiles').innerHTML = (list && list.length) ? '已上傳：' + list.map(x => {
-        const [n, u] = x.split(' | '); return u ? `<a href="${u}" target="_blank">${esc(n)}</a>` : esc(n);
-      }).join('、') : '';
-    }
+/* ---- 重新連接 ---- */
+function resume() {
+  const id = $('rId').value.trim(), code = $('rCode').value.trim().toUpperCase();
+  if (!id || !code) return toast('請輸入填報編號與編輯碼', 'err');
+  toast('載入中…', 'busy');
+  api('load', { id, code }).then(r => {
+    REC = { id:r.id, code:r.code };
+    const f = r.form;
+    $('college').value = f.college; fillDept(f.dept);
+    ['title','contact','ext','email','featureNote','context','objective','method','outcome','kpi'].forEach(k => $(k).value = f[k] || '');
+    document.querySelectorAll('input[name=strat]').forEach(cb => cb.checked = f.strategies.includes(cb.value));
+    document.querySelectorAll('input[name=feat]').forEach(cb => cb.checked = (f.features || []).includes(cb.value));
+    $('eqTable').tBodies[0].innerHTML = '';
+    (r.equipment.length ? r.equipment : [{}]).forEach(addRow);
+    showFiles(r.files);
+    $('doneId').textContent = r.id; $('doneCode').textContent = r.code; $('doneStatus').textContent = r.status;
+    const u = location.href.split('?')[0] + '?id=' + r.id + '&code=' + r.code;
+    $('doneUrl').textContent = u; $('doneUrl').href = u;
+    $('done').style.display = 'block'; $('resume').style.display = 'none';
+    toast('已載入 ' + f.dept + ' 的資料（' + r.status + '）', 'ok');
+  }).catch(e => toast(e.message, 'err'));
+}
+function showFiles(list) {
+  $('oldFiles').innerHTML = (list && list.length) ? '已上傳：' + list.map(x => {
+    const [n, u] = x.split(' | '); return u ? `<a href="${u}" target="_blank">${esc(n)}</a>` : esc(n);
+  }).join('、') : '';
+}
 
-    /* ---- 本機暫存（防意外關閉） ---- */
-    setInterval(() => { if (!REC.id) try { localStorage.setItem('nhu116draft', JSON.stringify(collect())); } catch (e) { } }, 15000);
-    function restoreLocal() {
-      let d; try { d = JSON.parse(localStorage.getItem('nhu116draft')); } catch (e) { }
-      if (!d || !d.form || !d.form.title) return;
-      if (!confirm('偵測到上次未儲存的內容，要還原嗎？')) return localStorage.removeItem('nhu116draft');
-      const f = d.form; $('college').value = f.college; fillDept(f.dept);
-      ['title', 'contact', 'ext', 'email', 'featureNote', 'context', 'objective', 'method', 'outcome', 'kpi'].forEach(k => $(k).value = f[k] || '');
-      document.querySelectorAll('input[name=strat]').forEach(cb => cb.checked = f.strategies.includes(cb.value));
-      $('eqTable').tBodies[0].innerHTML = ''; (d.equipment.length ? d.equipment : [{}]).forEach(addRow);
-    }
+/* ---- 本機暫存（防意外關閉） ---- */
+setInterval(() => { if (!REC.id) try { localStorage.setItem('nhu116draft', JSON.stringify(collect())); } catch(e){} }, 15000);
+function restoreLocal() {
+  let d; try { d = JSON.parse(localStorage.getItem('nhu116draft')); } catch(e){}
+  if (!d || !d.form || !d.form.title) return;
+  if (!confirm('偵測到上次未儲存的內容，要還原嗎？')) return localStorage.removeItem('nhu116draft');
+  const f = d.form; $('college').value = f.college; fillDept(f.dept);
+  ['title','contact','ext','email','featureNote','context','objective','method','outcome','kpi'].forEach(k => $(k).value = f[k] || '');
+  document.querySelectorAll('input[name=strat]').forEach(cb => cb.checked = f.strategies.includes(cb.value));
+  $('eqTable').tBodies[0].innerHTML = ''; (d.equipment.length ? d.equipment : [{}]).forEach(addRow);
+}
 
-    function toast(msg, cls) { const s = $('status'); s.textContent = msg; s.className = cls; s.style.display = 'block'; if (cls !== 'busy') setTimeout(() => s.style.display = 'none', 5000); }
-    function lockBtns(b) { $('btnDraft').disabled = b; $('btnSubmit').disabled = b; }
-  </script>
+function toast(msg, cls) { const s = $('status'); s.textContent = msg; s.className = cls; s.style.display = 'block'; if (cls !== 'busy') setTimeout(() => s.style.display = 'none', 5000); }
+function lockBtns(b) { $('btnDraft').disabled = b; $('btnSubmit').disabled = b; }
+</script>
 </body>
-
 </html>
