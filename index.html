@@ -192,10 +192,56 @@ const FALLBACK_UNITS = [
   ['科技學院','半導體應用學士學位學程'],
   ['通識教育中心','通識教育中心']
 ];
+/* 後備：112-116 校發計畫主軸／重點項目、辦學特色（以試算表設定為準） */
+const FALLBACK_PLAN = [
+  ['主軸A','精進創新教學','A1','強化教師的教學能力，激勵教師教學創新'],
+  ['主軸A','精進創新教學','A2','深化新科技支持系統，涵養資訊科技能力'],
+  ['主軸A','精進創新教學','A3','精進自主及跨域課程，提升學生跨域素養'],
+  ['主軸A','精進創新教學','A4','以校務分析證據為本，強化教學品保機制'],
+  ['主軸A','精進創新教學','A5','精進校務研究及管理機制，落實自我課責'],
+  ['主軸B','深化學輔工作','B1','精進三好友善校園，提升三好生命力與競爭力'],
+  ['主軸B','深化學輔工作','B2','精進南華志工制度，實踐服務利他與民主素養'],
+  ['主軸B','深化學輔工作','B3','優化多元輔導機制，強化學生競爭力與就業力'],
+  ['主軸C','強化職涯輔導','C1','深化自主學習課程與設計思考教學，提升競爭力'],
+  ['主軸C','強化職涯輔導','C2','精進實習、職場體驗及證照，強化學用證賽合一'],
+  ['主軸C','強化職涯輔導','C3','強化四年一貫職涯輔導機制，深化職涯關懷輔導'],
+  ['主軸D','厚實產學研發','D1','強化區域產學聯盟，促進區域產業發展'],
+  ['主軸D','厚實產學研發','D2','創新創業生態基地，強化創客實作能力'],
+  ['主軸D','厚實產學研發','D3','強化教師產學能量，提升教師實務能力'],
+  ['主軸D','厚實產學研發','D4','延攬師資獎勵研發，擴增產研發展能量'],
+  ['主軸D','厚實產學研發','D5','厚植研究資源共享，建構優質產研環境'],
+  ['主軸D','厚實產學研發','D6','優化多元評鑑機制，激發教師研究動能'],
+  ['主軸E','追求永續發展','E1','深化生命教育至各校，提升南華校園生命教育影響力'],
+  ['主軸E','追求永續發展','E2','拓展生命教育到社會，朝向國際級生命教育典範大學'],
+  ['主軸E','追求永續發展','E3','推展環境永續到國際，擴展南華環境永續發展影響力'],
+  ['主軸E','追求永續發展','E4','創設實踐專責的基地，以落實大學社會責任與實踐力'],
+  ['主軸E','追求永續發展','E5','推動綠色的行動辦公，邁向南華碳中和的綠色生活'],
+  ['主軸E','追求永續發展','E6','深化青銀共學的場域，促進青銀、校園及社會的共榮'],
+  ['主軸E','追求永續發展','E7','強化各類的風險管理，建構韌性校園與全面品質管理'],
+  ['主軸F','增進全球交流','F1','結合佛光山系統資源，提升國際競爭力'],
+  ['主軸F','增進全球交流','F2','強化EMI教學與學習，塑造國際化校園'],
+  ['主軸F','增進全球交流','F3','促進海外學習與交流，讓南華走向世界'],
+  ['主軸F','增進全球交流','F4','構建國際化友善校園，讓世界走向南華'],
+  ['主軸G','促進身心靈健康','G1','建調身心靈健康、體育組織與課程，深耕南華學生身心靈更健康'],
+  ['主軸G','促進身心靈健康','G2','創設師生健康運動護照與樂活日，促使南華教職員身心靈更健康'],
+  ['主軸G','促進身心靈健康','G3','應用物聯網與精準化培訓，引領雲嘉青年與高齡者身心靈更健康']
+];
+const FALLBACK_FEAT = [
+  ['F1','生命教育','以生命教育為核心，涵養學生生命素養與品德'],
+  ['F2','環境永續','推動永續發展、綠色校園與 SDGs 實踐'],
+  ['F3','智慧創新','發展智慧科技應用與跨域創新教學'],
+  ['F4','三好校園','落實做好事、說好話、存好心之校園文化']
+
+];
 function fallbackConfig() {
   const colleges = {};
   FALLBACK_UNITS.forEach(([c, d]) => (colleges[c] = colleges[c] || []).push(d));
-  return { colleges, plan: [], features: [], sys: {}, missing: [] };
+  return {
+    colleges,
+    plan: FALLBACK_PLAN.map(r => ({ g:r[0], gName:r[1], s:r[2], sName:r[3] })),
+    features: FALLBACK_FEAT.map(r => ({ code:r[0], name:r[1], desc:r[2] })),
+    sys: {}, missing: []
+  };
 }
 
 const $ = id => document.getElementById(id);
@@ -203,7 +249,7 @@ const $ = id => document.getElementById(id);
 /* ---- 初始化 ---- */
 api('config', {}).then(cfg => {
   init(cfg);
-}).catch(e => { init(fallbackConfig()); showErr('無法連到後端（' + e.message + '）。暫以內建名單顯示，校發重點項目與辦學特色無法勾選，請稍後重整或洽校務發展組。'); });
+}).catch(e => { init(fallbackConfig()); showErr('無法連到後端（' + e.message + '）。選項暫以內建版本顯示，但目前無法存檔，請稍後重整或洽校務發展組。'); });
 
 function init(cfg) {
   CFG = cfg;
@@ -212,7 +258,10 @@ function init(cfg) {
   if (!Object.keys(cfg.colleges || {}).length) { warn += '「設定_學院系所」沒有資料，暫以內建名單顯示。'; cfg.colleges = fallbackConfig().colleges; }
   const c = $('college');
   Object.keys(cfg.colleges).forEach(k => c.add(new Option(k, k)));
-  buildPlanTree(cfg.plan || []);
+  const fb = fallbackConfig();
+  if (!(cfg.plan || []).length)     { cfg.plan = fb.plan;         warn += '校發重點項目暫以內建版本顯示。'; }
+  if (!(cfg.features || []).length) { cfg.features = fb.features; warn += '辦學特色暫以內建版本顯示。'; }
+  buildPlanTree(cfg.plan);
   $('featBox').innerHTML = (cfg.features || []).map(f => `<label class="feat"><input type="checkbox" name="feat" value="${f.name}">${f.name}<small>${f.desc}</small></label>`).join('');
   const sys = cfg.sys || {};
   const d = sys['填報截止'] ? '　填報截止：' + fmt(sys['填報截止']) : '';
@@ -328,11 +377,14 @@ async function save(status) {
       REC = { id:res.id, code:res.code };
       $('doneId').textContent = res.id; $('doneCode').textContent = res.code;
       $('doneStatus').textContent = res.status;
-      $('doneUrl').textContent = res.url; $('doneUrl').href = res.url;
+      const myUrl = location.origin + location.pathname + '?id=' + res.id + '&code=' + res.code;
+      $('doneUrl').textContent = myUrl; $('doneUrl').href = myUrl;
       $('done').style.display = 'block'; $('resume').style.display = 'none';
       showFiles(res.files); $('files').value = '';
       localStorage.removeItem('nhu116draft');
-      toast(res.status === '已送出' ? '已送出，通知信已寄出' : '草稿已儲存', 'ok');
+      const mailMsg = res.mailed ? '，通知信已寄至 ' + $('email').value
+        : '（通知信未寄出，請自行記下編號與編輯碼' + (res.mailError ? '：' + res.mailError : '') + '）';
+      toast((res.status === '已送出' ? '已送出' : '草稿已儲存') + mailMsg, res.mailed ? 'ok' : 'err');
       lockBtns(false); window.scrollTo({ top:0, behavior:'smooth' });
     }).catch(e => { toast('儲存失敗：' + e.message, 'err'); lockBtns(false); });
   } catch (e) { toast(e.message, 'err'); lockBtns(false); }

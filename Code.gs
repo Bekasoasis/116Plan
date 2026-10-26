@@ -10,6 +10,12 @@
  * @OnlyCurrentDoc
  */
 const SPREADSHEET_ID = '13UsTozJDEr3f0MmFi5ShacvvKbIGaWGf-CAKHwFvW9c';
+
+// 填報頁（GitHub Pages）。「設定_系統」的「前端網址」有填時以該欄為準。
+const FRONTEND_URL = 'https://bekasoasis.github.io/116Plan/';
+
+// 寄送通知信（學校帳號寄出）。需 appsscript.json 含 script.send_mail 權限。
+const SEND_MAIL = true;
 const SH = {
   main : '填報主檔',
   equip: '設備明細',
@@ -50,8 +56,17 @@ function doGet(e) {
       .addMetaTag('viewport', 'width=device-width, initial-scale=1')
       .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
   } catch (err) {
-    // 前端放在 GitHub Pages、專案內沒有 Index.html 時，作為健康檢查頁
-    return json_({ ok: true, service: '116系所特色發展計畫 API', hint: '請用 ?action=config 取得設定' });
+    // 專案內沒有 Index.html：轉到 GitHub 填報頁，續填參數一併帶過去
+    const q = (e && e.parameter && e.parameter.id && e.parameter.code)
+      ? '?id=' + encodeURIComponent(e.parameter.id) + '&code=' + encodeURIComponent(e.parameter.code) : '';
+    const to = frontendUrl_() + q;
+    return HtmlService.createHtmlOutput(
+      '<meta name="viewport" content="width=device-width,initial-scale=1">' +
+      '<div style="font-family:sans-serif;padding:40px;text-align:center">' +
+      '<p>填報系統已移至新網址，正在轉跳…</p>' +
+      '<p><a href="' + to + '" target="_top" style="font-size:18px">點此前往填報頁</a></p></div>' +
+      '<script>try{window.top.location.replace(' + JSON.stringify(to) + ')}catch(e){}</script>'
+    ).setTitle('116學年度系所特色發展計畫填報');
   }
 }
 function doPost(e) {
@@ -65,6 +80,18 @@ function doPost(e) {
 function json_(o) {
   return ContentService.createTextOutput(JSON.stringify(o)).setMimeType(ContentService.MimeType.JSON);
 }
+function frontendUrl_() {
+  try { return readSys_(SpreadsheetApp.openById(SPREADSHEET_ID))['前端網址'] || FRONTEND_URL; }
+  catch (e) { return FRONTEND_URL; }
+}
+
+/* 在編輯器直接執行：寄一封測試信給自己，確認寄信權限與信箱 */
+function testMail() {
+  const me = Session.getActiveUser().getEmail();
+  MailApp.sendEmail({ to: me, name: '南華大學研發處校務發展組', subject: '[116填報系統] 寄信測試', body: '收到這封信代表通知信功能正常。' });
+  Logger.log('已寄測試信至 %s，今日剩餘配額 %s 封', me, MailApp.getRemainingDailyQuota());
+}
+
 function safe_(fn) { try { return fn(); } catch (err) { return { error: err.message }; } }
 
 /* ---------- 第一次使用：建立工作表、種子資料、上傳資料夾 ---------- */
@@ -225,10 +252,33 @@ function saveRecord(p) {
     }
 
     // 6. 續填連結（不寄信，避免 Gmail 授權被 Google 封鎖；連結顯示在畫面上並可存回試算表）
-    const base = sys['前端網址'] || ScriptApp.getService().getUrl();
+    const base = sys['前端網址'] || FRONTEND_URL;
     const url  = base + (base.indexOf('?') > -1 ? '&' : '?') + 'id=' + id + '&code=' + code;
 
-    return { id, code, url, status, total, files: links };
+    // 7. 通知信（失敗不影響存檔，結果回傳給前端顯示）
+    let mailed = false, mailError = '';
+    if (SEND_MAIL && f.email) {
+      try {
+        const cc = String(sys['通知副本Email'] || '').trim();
+        const opt = {
+          to: f.email,
+          name: '南華大學研發處校務發展組',
+          subject: '[116系所特色發展計畫] ' + f.dept + '：' + status + '（' + id + '）',
+          htmlBody:
+            '<p>' + f.college + ' ' + f.dept + ' 的填報已' + (status === '已送出' ? '送出' : '儲存為草稿') + '。</p>' +
+            '<p>計畫名稱：' + (f.title || '') + '</p>' +
+            '<p>填報編號：<b>' + id + '</b>　編輯碼：<b>' + code + '</b></p>' +
+            '<p>要繼續填寫或修改，請點：<a href="' + url + '">' + url + '</a></p>' +
+            '<p>設備 ' + equipment.length + ' 項，合計 NT$ ' + total.toLocaleString() + '。</p>' +
+            '<p style="color:#888">本信由系統自動寄出，請勿直接回覆。</p>'
+        };
+        if (cc) opt.cc = cc;
+        MailApp.sendEmail(opt);
+        mailed = true;
+      } catch (err) { mailError = err.message; }
+    }
+
+    return { id, code, url, status, total, files: links, mailed, mailError };
   } finally {
     lock.releaseLock();
   }
