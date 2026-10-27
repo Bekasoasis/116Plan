@@ -95,10 +95,10 @@ button:disabled{opacity:.5;cursor:wait}
   <section>
     <h2>一、填報單位</h2>
     <div class="grid">
-      <div><label class="req">學院／處室</label>
+      <div><label class="req">學院／行政單位</label>
         <select id="college" onchange="fillDept()"><option value="">請選擇</option></select></div>
       <div><label class="req">系所／組別</label>
-        <select id="dept"><option value="">請先選擇學院／處室</option></select></div>
+        <select id="dept"><option value="">請先選擇學院／行政單位</option></select></div>
     </div>
     <label class="req">計畫名稱</label><input type="text" id="title" placeholder="例：智慧財務決策實驗室建置計畫">
     <div class="grid">
@@ -346,7 +346,7 @@ function collect() {
 }
 function validate(d, strict) {
   const f = d.form, miss = [];
-  if (!f.college) miss.push('學院／處室'); if (!f.dept) miss.push('系所／組別');
+  if (!f.college) miss.push('學院／行政單位'); if (!f.dept) miss.push('系所／組別');
   if (!f.title) miss.push('計畫名稱'); if (!f.contact) miss.push('聯絡人'); if (!f.email) miss.push('Email');
   if (strict) {
     if (!f.strategies.length) miss.push('對應校發重點項目');
