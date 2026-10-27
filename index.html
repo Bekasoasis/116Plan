@@ -2,6 +2,8 @@
 <html lang="zh-Hant">
 <head>
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>116學年度單位特色發展計畫填報</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@600;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -65,8 +67,8 @@ button:disabled{opacity:.5;cursor:wait}
 </head>
 <body>
 <header><div class="wrap">
-  <h1>116學年度系所特色發展計畫填報</h1>
-  <p>南華大學研發處校務發展組　｜　各教學單位填寫後直接彙入校務發展計畫資料庫</p>
+  <h1>116學年度單位特色發展計畫填報</h1>
+  <p>南華大學研發處校務發展組　｜　各學術及行政單位填寫後直接彙入校務發展計畫資料庫</p>
 </div></header>
 
 <main>
@@ -93,10 +95,10 @@ button:disabled{opacity:.5;cursor:wait}
   <section>
     <h2>一、填報單位</h2>
     <div class="grid">
-      <div><label class="req">學院</label>
+      <div><label class="req">學院／處室</label>
         <select id="college" onchange="fillDept()"><option value="">請選擇</option></select></div>
-      <div><label class="req">系所</label>
-        <select id="dept"><option value="">請先選擇學院</option></select></div>
+      <div><label class="req">系所／組別</label>
+        <select id="dept"><option value="">請先選擇學院／處室</option></select></div>
     </div>
     <label class="req">計畫名稱</label><input type="text" id="title" placeholder="例：智慧財務決策實驗室建置計畫">
     <div class="grid">
@@ -128,14 +130,14 @@ button:disabled{opacity:.5;cursor:wait}
   </section>
 
   <section>
-    <h2>四、購置設備</h2>
-    <p class="hint">單價與數量填數字即可，小計與合計自動計算。無設備需求可留空。</p>
+    <h2>四、資本門需求</h2>
+    <p class="hint">每項先選類別（儀器設備、軟體、圖書期刊、工程、其他）。單價與數量填數字即可，小計與合計自動計算。無需求可留空。</p>
     <table id="eqTable">
-      <thead><tr><th style="width:15%">設備名稱</th><th style="width:20%">基本規格</th><th style="width:9%">單價</th><th style="width:6%">數量</th><th style="width:9%">小計</th><th style="width:13%">設置地點</th><th style="width:19%">用途與說明</th><th></th></tr></thead>
+      <thead><tr><th style="width:10%">類別</th><th style="width:13%">項目名稱</th><th style="width:17%">基本規格</th><th style="width:9%">單價</th><th style="width:6%">數量</th><th style="width:9%">小計</th><th style="width:12%">設置地點</th><th style="width:18%">用途與說明</th><th></th></tr></thead>
       <tbody></tbody>
     </table>
-    <button class="sec" type="button" onclick="addRow()" style="margin-top:10px">＋ 新增一項設備</button>
-    <div class="total">設備合計：NT$ <span id="total">0</span></div>
+    <button class="sec" type="button" onclick="addRow()" style="margin-top:10px">＋ 新增一項</button>
+    <div class="total">資本門合計：NT$ <span id="total">0</span><div id="catSum" class="hint" style="font-weight:400;margin-top:2px"></div></div>
 
     <label>上傳估價單<small>PDF / JPG / PNG，每檔 10MB 以內，可多選</small></label>
     <input type="file" id="files" multiple accept=".pdf,.jpg,.jpeg,.png">
@@ -145,7 +147,7 @@ button:disabled{opacity:.5;cursor:wait}
   <section>
     <h2>五、預期達成目標</h2>
     <label class="req">預期效益</label>
-    <textarea id="outcome" placeholder="對學生學習、招生、產學或系所特色的具體影響"></textarea>
+    <textarea id="outcome" placeholder="對學生學習、招生、產學、校園服務或單位特色的具體影響"></textarea>
     <label class="req">量化指標<small>可查核的數字：受益人數、課程數、證照數、產學金額…</small></label>
     <textarea id="kpi" placeholder="例：116-1 開設 2 門實作課程，受益學生 120 人；取得證照 30 張"></textarea>
   </section>
@@ -190,7 +192,10 @@ const FALLBACK_UNITS = [
   ['科技學院','資訊管理學系'],['科技學院','資訊工程學系'],['科技學院','資訊科技進修學士班'],
   ['科技學院','自然生物科技學系'],['科技學院','永續綠色科技碩士學位學程'],
   ['科技學院','半導體應用學士學位學程'],
-  ['通識教育中心','通識教育中心']
+  ['通識教育中心','通識教育中心'],
+  ['總務處','事務組'],['總務處','營繕組'],['總務處','環安組'],
+  ['圖書資訊處','網路系統組'],['圖書資訊處','系統發展組'],['圖書資訊處','科技整合組'],
+  ['圖書資訊處','推廣典藏組'],['圖書資訊處','採訪編目組']
 ];
 /* 後備：112-116 校發計畫主軸／重點項目、辦學特色（以試算表設定為準） */
 const FALLBACK_PLAN = [
@@ -295,23 +300,26 @@ function addRow(r = {}) {
   const tb = $('eqTable').tBodies[0];
   const tr = tb.insertRow();
   tr.innerHTML = `
+    <td><select class="e-cat" onchange="calc()"><option${(r.cat||'儀器設備')==='儀器設備'?' selected':''}>儀器設備</option><option${(r.cat||'儀器設備')==='軟體'?' selected':''}>軟體</option><option${(r.cat||'儀器設備')==='圖書期刊'?' selected':''}>圖書期刊</option><option${(r.cat||'儀器設備')==='工程'?' selected':''}>工程</option><option${(r.cat||'儀器設備')==='其他'?' selected':''}>其他</option></select></td>
     <td><input type="text" class="e-name" value="${esc(r.name)}"></td>
-    <td><textarea class="e-spec" placeholder="品牌／型號／關鍵規格">${esc(r.spec)}</textarea></td>
+    <td><textarea class="e-spec" placeholder="品牌／型號／關鍵規格；工程請寫施作範圍">${esc(r.spec)}</textarea></td>
     <td><input type="number" class="e-price" min="0" value="${r.price ?? ''}" oninput="calc()"></td>
     <td><input type="number" class="e-qty" min="0" value="${r.qty ?? ''}" oninput="calc()"></td>
     <td class="sub e-sub">0</td>
     <td><input type="text" class="e-loc" placeholder="例：C213教室" value="${esc(r.location)}"></td>
-    <td><textarea class="e-purpose" placeholder="這項設備用來做什麼、對應哪一項執行做法（請具體說明）">${esc(r.purpose)}</textarea></td>
+    <td><textarea class="e-purpose" placeholder="這個項目用來做什麼、對應哪一項執行做法（請具體說明）">${esc(r.purpose)}</textarea></td>
     <td><button class="del" type="button" onclick="this.closest('tr').remove();calc()">刪除</button></td>`;
   calc();
 }
 function calc() {
-  let t = 0;
+  let t = 0; const byCat = {};
   document.querySelectorAll('#eqTable tbody tr').forEach(tr => {
     const s = (+tr.querySelector('.e-price').value || 0) * (+tr.querySelector('.e-qty').value || 0);
     tr.querySelector('.e-sub').textContent = s.toLocaleString(); t += s;
+    const c = tr.querySelector('.e-cat').value; if (s) byCat[c] = (byCat[c] || 0) + s;
   });
   $('total').textContent = t.toLocaleString();
+  const cs = $('catSum'); if (cs) cs.textContent = Object.keys(byCat).map(k => k + ' NT$ ' + byCat[k].toLocaleString()).join('　｜　');
 }
 function esc(s){ return String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;'); }
 
@@ -330,7 +338,7 @@ function collect() {
       outcome:$('outcome').value, kpi:$('kpi').value
     },
     equipment: [...document.querySelectorAll('#eqTable tbody tr')].map(tr => ({
-      name:tr.querySelector('.e-name').value.trim(), spec:tr.querySelector('.e-spec').value.trim(),
+      cat:tr.querySelector('.e-cat').value, name:tr.querySelector('.e-name').value.trim(), spec:tr.querySelector('.e-spec').value.trim(),
       price:tr.querySelector('.e-price').value, qty:tr.querySelector('.e-qty').value,
       location:tr.querySelector('.e-loc').value.trim(), purpose:tr.querySelector('.e-purpose').value.trim()
     })).filter(r => r.name)
@@ -338,13 +346,13 @@ function collect() {
 }
 function validate(d, strict) {
   const f = d.form, miss = [];
-  if (!f.college) miss.push('學院'); if (!f.dept) miss.push('系所');
+  if (!f.college) miss.push('學院／處室'); if (!f.dept) miss.push('系所／組別');
   if (!f.title) miss.push('計畫名稱'); if (!f.contact) miss.push('聯絡人'); if (!f.email) miss.push('Email');
   if (strict) {
     if (!f.strategies.length) miss.push('對應校發重點項目');
     if (!f.features.length) miss.push('學校辦學特色關聯');
     ['context','objective','method','outcome','kpi'].forEach(k => { if (!f[k].trim()) miss.push({context:'現況分析',objective:'計畫目標',method:'執行做法',outcome:'預期效益',kpi:'量化指標'}[k]); });
-    d.equipment.forEach((r,i) => { if (!(+r.price>0) || !(+r.qty>0) || !r.location) miss.push(`設備第${i+1}項的單價／數量／設置地點`); });
+    d.equipment.forEach((r,i) => { if (!(+r.price>0) || !(+r.qty>0) || !r.location) miss.push(`資本門第${i+1}項的單價／數量／設置地點`); });
   }
   return miss;
 }
@@ -383,7 +391,8 @@ async function save(status) {
       showFiles(res.files); $('files').value = '';
       localStorage.removeItem('nhu116draft');
       const mailMsg = res.mailed ? '，通知信已寄至 ' + $('email').value
-        : '（通知信未寄出，請自行記下編號與編輯碼' + (res.mailError ? '：' + res.mailError : '') + '）';
+        : (res.mailed === undefined ? '（後端仍是舊版本，未寄通知信，請洽校務發展組重新部署新版本）'
+        : '（通知信未寄出，請自行記下編號與編輯碼' + (res.mailError ? '：' + res.mailError : '') + '）');
       toast((res.status === '已送出' ? '已送出' : '草稿已儲存') + mailMsg, res.mailed ? 'ok' : 'err');
       lockBtns(false); window.scrollTo({ top:0, behavior:'smooth' });
     }).catch(e => { toast('儲存失敗：' + e.message, 'err'); lockBtns(false); });
